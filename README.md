@@ -1,4 +1,4 @@
-# Bot Oficial de la República de Insomniac: Ghost
+# Bot Oficial de la República de Insomniac
 Python-based discord bot. Now in discord.py rewrite version.
 
 ## Install
