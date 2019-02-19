@@ -1,0 +1,14 @@
+create_prefix_table: >
+  CREATE TABLE IF NOT EXISTS prefixes (
+    server_id NUMERIC(20) PRIMARY KEY,
+    prefix_list TEXT[]
+  );
+insert_prefix: INSERT INTO prefixes VALUES(%s, %s);
+insert_prefix_returning: >
+  INSERT INTO prefixes VALUES(%s, %s)
+    RETURNING prefix_list;
+select_prefixes: SELECT prefix_list FROM prefixes WHERE server_id = %s;
+update_prefixes: >
+  UPDATE prefixes
+    SET prefix_list = %s
+    WHERE server_id = %s;

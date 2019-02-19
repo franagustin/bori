@@ -1,0 +1,6 @@
+command_groups:
+  - commands.utility
+db_config:
+  host: localhost
+  database: ghost
+  user: ghost

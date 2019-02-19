@@ -3,15 +3,15 @@ import os
 import yaml
 from discord.ext import commands
 
-def get_prefixes(bot, message):
-    return ''
+from utils import get_guild_prefixes
 
-data = yaml.load(open('data.yml'))
+
+data = yaml.load(open('data/data.yml'))
 
 TOKEN = os.getenv('GHOST_TOKEN')
 
 bot = commands.Bot(
-    command_prefix=get_prefixes,
+    command_prefix=get_guild_prefixes,
     case_insensitive=True
 )
 
