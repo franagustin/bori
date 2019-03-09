@@ -4,9 +4,55 @@ from discord.ext import commands
 from utils import BaseCommand, get_embed, db_connect, get_prefixes
 
 DB_QUERIES = yaml.load(open('data/db_queries.yml'))
+DATA = yaml.load(open('data/data.yml'))
 
 
 class Utility(BaseCommand):
+    @commands.command(name='info', aliases=[
+        'información', 'informacion', 'information'
+    ])
+    async def information(self, ctx):
+        info_embed = await get_embed(
+            ctx,
+            title=u'\U00002139 '+DATA['info title'],
+            description=DATA['info description'],
+            colour=0x2464CC,
+            thumbnail=self.bot.user.avatar_url,
+            author={
+                'name': 'Franco Peluix',
+                'url': 'https://github.com/francokuchiki/bori/',
+                'icon': 'https://avatars1.githubusercontent.com/u/39889930'
+            },
+            footer={
+                'text': (
+                    'Información solicitada por '
+                    f'{ctx.message.author.display_name} ('
+                    f'{ctx.message.author.name}#'
+                    f'{ctx.message.author.discriminator})'
+                ),
+                'icon': ctx.message.author.avatar_url
+            },
+            fields=(
+                {
+                    'name': 'Versión',
+                    'value': DATA['version'],
+                    'inline': True
+                },
+                {
+                    'name': 'Versión BORI (base)',
+                    'value': DATA['base version'],
+                    'inline': True
+                },
+                {
+                    'name': 'Código fuente',
+                    'value': DATA['source code url'],
+                    'inline': False
+                }
+            )
+        )
+        await ctx.message.channel.send(embed=info_embed)
+
+
     @commands.command(name='prefijo', aliases=[
         'prefijos', 'prefix', 'prefixes'
     ])
@@ -52,12 +98,21 @@ class Utility(BaseCommand):
         """
         prefixes = await get_prefixes(ctx.message.guild.id)
         prefixes = '\n'.join(prefixes)
-        prefix_embed = get_embed(
+        prefix_embed = await get_embed(
             ctx,
             title=u'\U00002699'+' Prefijos',
 			description='Lista de prefijos actuales para este servidor.',
             colour=0x2464CC,
             thumbnail=self.bot.user.avatar_url,
+            footer={
+                'text': (
+                    'Lista solicitada por '
+                    f'{ctx.message.author.display_name} ('
+                    f'{ctx.message.author.name}#'
+                    f'{ctx.message.author.discriminator})'
+                ),
+                'icon': ctx.message.author.avatar_url
+            },
             fields=(
                 {
                     'name': 'Prefijos (uno por línea)',
@@ -102,7 +157,7 @@ class Utility(BaseCommand):
                 'No puedes quitar el único prefijo.'
             )
         else:
-            prefixes = prefixes.remove(rm_prefix)
+            prefixes.remove(rm_prefix)
             conn = db_connect()
             cur = conn.cursor()
             cur.execute(
@@ -132,6 +187,7 @@ class Utility(BaseCommand):
             'prefijo para el server.'
         )
 
+
     @commands.command()
     async def ping(self, ctx):
         """Comando *ping*. Responde *¡Pong!* y lo edita. Luego cambia ese
@@ -156,12 +212,21 @@ class Utility(BaseCommand):
         edited_time = pong_msg.edited_at
         edit_time = self.get_milliseconds(edited_time - ponged_time)
         total_time = self.get_milliseconds(edited_time - requested_time)
-        pong_embed=get_embed(
+        pong_embed=await get_embed(
             ctx,
             title=u'\U0001F3D3'+' ¡Pong!',
 			description='Me dices ping, te digo pong.',
 			colour=0xDD2E44,
             thumbnail='https://i.imgur.com/QzF08A1.png',
+            footer={
+                'text': (
+                    'Este mensaje es una respuesta a '
+                    f'{ctx.message.author.display_name} ('
+                    f'{ctx.message.author.name}#'
+                    f'{ctx.message.author.discriminator})'
+                ),
+                'icon': ctx.message.author.avatar_url
+            },
             fields=(
                 {
                     'name': u'\U0001F54A'+' Tiempo de respuesta',

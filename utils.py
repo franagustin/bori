@@ -2,7 +2,7 @@ import discord
 import os
 import psycopg2
 import yaml
-from discord.ext.commands import when_mentioned_or
+from discord.ext.commands import Cog, when_mentioned_or
 
 DB_DATA = yaml.load(open('data/data.yml'))['db_config']
 DB_PASSWORD = os.getenv('DB_PASSWORD')
@@ -25,10 +25,11 @@ async def get_prefixes(guild_id):
     try:
         cur.execute(DB_QUERIES['select_prefixes'], (guild_id,))
     except:
+        conn.rollback()
         cur.execute(DB_QUERIES['create_prefix_table'])
         cur.execute(
             DB_QUERIES['insert_prefix_returning'],
-            (guild, ['g$'])
+            (guild_id, ['g$'])
         )
         conn.commit()
     prefixes = cur.fetchone()[0]
@@ -36,7 +37,7 @@ async def get_prefixes(guild_id):
     conn.close()
     return prefixes
 
-class BaseCommand:
+class BaseCommand(Cog):
     """Clase base para evitar definir __init__ en cada grupo de comandos."""
     def __init__(self, bot):
         self.bot = bot
@@ -50,29 +51,52 @@ def db_connect():
         dbname=DB_DATA['database']
     )
 
-def get_embed(ctx, title='', description='', colour=0, thumbnail='',
-        fields=()):
+async def get_embed(ctx, title='', description='', colour=0, thumbnail='',
+        author=None, footer=None, fields=()):
     """Toma los datos para rellenar el embed y lo devuelve con las 
-    propiedades y campos indicados."""
+    propiedades y campos indicados.
+    """
     embed = discord.Embed(
         title=title,
         description=description,
         colour=colour
     )
+    embed.set_thumbnail(url=thumbnail)
+    if author is not None:
+        embed.set_author(
+            name=author['name'],
+            url=author['url'],
+            icon_url=author['icon']
+        )
+    if footer is not None:
+        embed.set_footer(text=footer['text'], icon_url=footer['icon'])
     for field in fields:
         embed.add_field(
             name=field['name'],
             value=field['value'],
             inline=field['inline']
         )
-    embed.set_thumbnail(url=thumbnail)
-    embed.set_footer(
-        text=(
-            'Este mensaje es una respuesta a '
-            f'{ctx.message.author.display_name} ('
-            f'{ctx.message.author.name}#'
-            f'{ctx.message.author.discriminator})'
-        ),
-        icon_url=ctx.message.author.avatar_url
-    )
     return embed
+
+async def get_member(members, member_search):
+    try:
+        member = discord.utils.get(members, id=int(member_search))
+    except:
+        member = discord.utils.get(members, mention=member_search)
+    if member is None:
+        member = discord.utils.get(members, name=member_search)
+    return member
+
+async def get_role(roles, role_search):
+    try:
+        role = discord.utils.get(roles, id=int(role_search[0]))
+    except:
+        role = discord.utils.get(roles, mention=role_search[0])
+    if role is None:
+        role = discord.utils.get(roles, name=role_search[0])
+    if role is None:
+        role_search = " ".join(role_search)
+        for guild_role in roles:
+            if guild_role.name.startswith(role_search):
+                role = guild_role
+    return role
