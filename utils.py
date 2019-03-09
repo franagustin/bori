@@ -97,6 +97,6 @@ async def get_role(roles, role_search):
     if role is None:
         role_search = " ".join(role_search)
         for guild_role in roles:
-            if guild_role.name.startswith(role_search):
+            if guild_role.name.lower().startswith(role_search.lower()):
                 role = guild_role
     return role
