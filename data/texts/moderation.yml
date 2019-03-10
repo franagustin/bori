@@ -23,3 +23,12 @@ set:
   - solo
   - sólo
   - solamente
+prole members:
+  - users
+  - "users:"
+  - members
+  - "members:"
+  - usuarios
+  - "usuarios:"
+  - miembros
+  - "miembros:"

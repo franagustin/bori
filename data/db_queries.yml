@@ -6,9 +6,33 @@ create_prefix_table: >
 insert_prefix: INSERT INTO prefixes VALUES(%s, %s);
 insert_prefix_returning: >
   INSERT INTO prefixes VALUES(%s, %s)
-    RETURNING prefix_list;
+  RETURNING prefix_list;
 select_prefixes: SELECT prefix_list FROM prefixes WHERE server_id = %s;
 update_prefixes: >
   UPDATE prefixes
     SET prefix_list = %s
     WHERE server_id = %s;
+create_prole_table: >
+  CREATE TABLE IF NOT EXISTS persistent_roles (
+    id SERIAL NOT NULL PRIMARY KEY,
+    server_id NUMERIC(20) NOT NULL,
+    member_list NUMERIC(20)[],
+    role_id NUMERIC(20)
+  );
+select_server_proles: >
+  SELECT role_id FROM persistent_roles WHERE server_id = %s;
+select_filled_server_proles: >
+  SELECT role_id, member_list FROM persistent_roles
+  WHERE server_id = %s AND member_list <> '{}' AND member_list IS NOT NULL;
+insert_prole: >
+  INSERT INTO persistent_roles(server_id, member_list, role_id) 
+  VALUES(%s, %s, %s)
+get_members_prole: >
+  SELECT member_list FROM persistent_roles
+  WHERE server_id = %s AND role_id = %s;
+update_prole: >
+  UPDATE persistent_roles
+    SET member_list = %s
+    WHERE server_id = %s AND role_id = %s;
+remove_prole: >
+  DELETE FROM persistent_roles WHERE server_id = %s AND role_id = %s;
