@@ -1,6 +1,7 @@
 import discord
 import os
 import psycopg2
+import re
 import yaml
 from discord.ext.commands import Cog, when_mentioned_or
 
@@ -8,6 +9,8 @@ DB_DATA = yaml.load(open('data/data.yml'))['db_config']
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 DB_QUERIES = yaml.load(open('data/db_queries.yml'))
 
+TIME_PATTERN = re.compile(r'^[0-9]+s?m?h?d?w?a?y?c?$')
+NUMBER_PATTERN = re.compile(r'^[0-9]+$')
 
 async def get_guild_prefixes(bot, message):
     """Función pasada al crear el commands.Bot. Lee desde la bd los prefijos
@@ -100,3 +103,11 @@ async def get_role(roles, role_search):
             if guild_role.name.lower().startswith(role_search.lower()):
                 role = guild_role
     return role
+
+async def get_muted_role(roles):
+    muted_role_names = ('Silenciado', 'Muted', 'callate', 'CALLATE BOLUDO')
+    for role_name in muted_role_names:
+        muted_role = await get_role(roles, (role_name,))
+        if muted_role is not None:
+            break
+    return muted_role

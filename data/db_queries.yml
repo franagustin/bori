@@ -36,3 +36,17 @@ update_prole: >
     WHERE server_id = %s AND role_id = %s;
 remove_prole: >
   DELETE FROM persistent_roles WHERE server_id = %s AND role_id = %s;
+create_muted_table: >
+  CREATE TABLE IF NOT EXISTS muted (
+    id SERIAL NOT NULL PRIMARY KEY,
+    server_id NUMERIC(20) NOT NULL,
+    member_id NUMERIC(20) NOT NULL,
+    end_time TIMESTAMP WITHOUT TIME ZONE NOT NULL
+  );
+insert_muted: >
+  INSERT INTO muted(server_id, member_id, end_time) VALUES(%s, %s, %s);
+update_muted: >
+  UPDATE muted SET end_time = %s WHERE server_id = %s AND member_id = %s;
+remove_muted: DELETE FROM muted WHERE server_id = %s AND member_id = %s;
+select_muted: SELECT * FROM muted WHERE server_id = %s AND member_id = %s;
+select_all_muted: SELECT * FROM muted WHERE server_id = %s;

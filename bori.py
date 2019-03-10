@@ -3,6 +3,7 @@ import os
 import yaml
 from discord.ext import commands
 
+from commands.tasks import UnmuteTaskLoop
 from utils import get_guild_prefixes
 
 
@@ -18,4 +19,5 @@ bot = commands.Bot(
 if __name__ == '__main__':
     for group in data['command_groups']:
         bot.load_extension(group)
+    bot.task_loop = UnmuteTaskLoop(bot)
     bot.run(TOKEN)
