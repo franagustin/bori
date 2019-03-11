@@ -2,9 +2,8 @@ import discord
 import os
 import yaml
 from discord.ext import commands
-
-from commands.tasks import UnmuteTaskLoop
-from utils import get_guild_prefixes
+from tasks.moderation.silence import UnmuteTaskLoop
+from utils import BaseTask, get_custom_tasks, get_guild_prefixes
 
 
 data = yaml.load(open('data/data.yml'))
@@ -19,5 +18,5 @@ bot = commands.Bot(
 if __name__ == '__main__':
     for group in data['command_groups']:
         bot.load_extension(group)
-    bot.task_loop = UnmuteTaskLoop(bot)
+    bot.custom_tasks = get_custom_tasks(bot)
     bot.run(TOKEN)

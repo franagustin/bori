@@ -1,58 +1,11 @@
-import discord
 import yaml
 from discord.ext import commands
-from utils import BaseCommand, get_embed, db_connect, get_prefixes
+from utils import BaseCommand, db_connect, get_embed, get_prefixes
 
 DB_QUERIES = yaml.load(open('data/db_queries.yml'))
-DATA = yaml.load(open('data/data.yml'))
 
 
-class Utility(BaseCommand):
-    @commands.command(name='info', aliases=[
-        'información', 'informacion', 'information'
-    ])
-    async def information(self, ctx):
-        info_embed = await get_embed(
-            ctx,
-            title=u'\U00002139 '+DATA['info title'],
-            description=DATA['info description'],
-            colour=0x2464CC,
-            thumbnail=self.bot.user.avatar_url,
-            author={
-                'name': 'Franco Peluix',
-                'url': 'https://github.com/francokuchiki/bori/',
-                'icon': 'https://avatars1.githubusercontent.com/u/39889930'
-            },
-            footer={
-                'text': (
-                    'Información solicitada por '
-                    f'{ctx.message.author.display_name} ('
-                    f'{ctx.message.author.name}#'
-                    f'{ctx.message.author.discriminator})'
-                ),
-                'icon': ctx.message.author.avatar_url
-            },
-            fields=(
-                {
-                    'name': 'Versión',
-                    'value': DATA['version'],
-                    'inline': True
-                },
-                {
-                    'name': 'Versión BORI (base)',
-                    'value': DATA['base version'],
-                    'inline': True
-                },
-                {
-                    'name': 'Código fuente',
-                    'value': DATA['source code url'],
-                    'inline': False
-                }
-            )
-        )
-        await ctx.message.channel.send(embed=info_embed)
-
-
+class Prefix(BaseCommand):
     @commands.command(name='prefijo', aliases=[
         'prefijos', 'prefix', 'prefixes'
     ])
@@ -186,74 +139,3 @@ class Utility(BaseCommand):
             f'**{prefix}** ha sido establecido como el único '
             'prefijo para el server.'
         )
-
-
-    @commands.command()
-    async def ping(self, ctx):
-        """Comando *ping*. Responde *¡Pong!* y lo edita. Luego cambia ese
-        mensaje por un embed que contenga el tiempo que tarda en responder,
-        el tiempo que tarda en editar desde que responde y el tiempo total
-        entre el primer mensaje y la edición.
-
-		Parámetros: NINGUNO
-		Sintaxis:
-			{prefijo}ping
-	    """
-        msg = ctx.message
-        pong_msg = await msg.channel.send('¡Pong!')
-        requested_time = msg.created_at
-        ponged_time = pong_msg.created_at
-        reply_time = self.get_milliseconds(ponged_time - requested_time)
-        await pong_msg.edit(content=(
-            f'{pong_msg.content} '
-            f'`:{reply_time}:`'
-            )
-        )
-        edited_time = pong_msg.edited_at
-        edit_time = self.get_milliseconds(edited_time - ponged_time)
-        total_time = self.get_milliseconds(edited_time - requested_time)
-        pong_embed=await get_embed(
-            ctx,
-            title=u'\U0001F3D3'+' ¡Pong!',
-			description='Me dices ping, te digo pong.',
-			colour=0xDD2E44,
-            thumbnail='https://i.imgur.com/QzF08A1.png',
-            footer={
-                'text': (
-                    'Este mensaje es una respuesta a '
-                    f'{ctx.message.author.display_name} ('
-                    f'{ctx.message.author.name}#'
-                    f'{ctx.message.author.discriminator})'
-                ),
-                'icon': ctx.message.author.avatar_url
-            },
-            fields=(
-                {
-                    'name': u'\U0001F54A'+' Tiempo de respuesta',
-                    'value': f'Respondí en: {reply_time}ms.',
-                    'inline': False
-                },
-                {
-                    'name': u'\U0000270F'+' Tiempo de edición',
-                    'value': f'Edité mi mensaje en: {edit_time}ms.',
-                    'inline': False
-                },
-                {
-                    'name': u'\U0001F4F0' + ' Tiempo total',
-                    'value': (
-                        'Entre tu mensaje y mi edición pasaron: '
-                        f'{total_time}ms.'
-                    ),
-                    'inline': False
-                }
-            )
-        )
-        await pong_msg.edit(content='', embed=pong_embed)
-
-    def get_milliseconds(self, time):
-        """Toma un timedelta y devuelve los milisegundos."""
-        return time.seconds*1000 + time.microseconds/1000
-
-
-def setup(bot):
-    bot.add_cog(Utility(bot))

@@ -1,29 +1,24 @@
 import asyncio
 import yaml
 from datetime import datetime
-from utils import db_connect, get_member, get_embed
+from utils import BaseTask, db_connect, get_embed, get_member, get_muted_role
 
 DB_QUERIES = yaml.load(open('data/db_queries.yml'))
 
 
-class UnmuteTaskLoop:
-    def __init__(self, bot):
-        self.bot = bot
-        tasks = [getattr(self, a) for a in dir(self) if not a.startswith('_')]
-        tasks = [t for t in tasks if callable(t)]
-        for task in tasks:
-            self.bot.loop.create_task(task())
-
-
+class UnmuteTaskLoop(BaseTask):
     async def unmute(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             for guild in self.bot.guilds:
                 await self._autounmute_guild_members(guild)
             await asyncio.sleep(1)
-    
+
 
     async def _autounmute_guild_members(self, guild):
+        muted_role = await get_muted_role(guild.roles)
+        if muted_role is None:
+            return
         conn = db_connect()
         cur = conn.cursor()
         try:
@@ -40,6 +35,12 @@ class UnmuteTaskLoop:
                 conn.commit()
                 await self._send_unmute_embed(guild, member_data[2])
                 await self._send_unmute_embed(guild, member_data[2], True)
+                member = await get_member(guild.members, member_data[2])
+                if member is not None and muted_role in member.roles:
+                    await member.remove_roles(
+                        muted_role,
+                        reason="Unmute Task."
+                    )
         cur.close()
         conn.close()
 

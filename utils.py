@@ -2,6 +2,7 @@ import discord
 import os
 import psycopg2
 import re
+import tasks
 import yaml
 from discord.ext.commands import Cog, when_mentioned_or
 
@@ -44,6 +45,28 @@ class BaseCommand(Cog):
     """Clase base para evitar definir __init__ en cada grupo de comandos."""
     def __init__(self, bot):
         self.bot = bot
+        self.bot.add_listener(self.on_member_join)
+
+    async def on_member_join(self, member):
+        on_member_join_funcs = [
+            getattr(self, a) for a in dir(self) if
+            a.startswith('_on_member_join_')
+        ]
+        on_member_join_funcs = [
+            f for f in on_member_join_funcs if callable(f)
+        ]
+        for func in on_member_join_funcs:
+            await func(member)
+
+
+class BaseTask:
+    def __init__(self, bot):
+        self.bot = bot
+        tasks = [getattr(self, a) for a in dir(self) if not a.startswith('_')]
+        tasks = [t for t in tasks if callable(t)]
+        for task in tasks:
+            self.bot.loop.create_task(task())
+
 
 def db_connect():
     """Conecta a la base de datos y devuelve la conexión."""
@@ -111,3 +134,21 @@ async def get_muted_role(roles):
         if muted_role is not None:
             break
     return muted_role
+
+def get_custom_tasks(bot):
+    tasks_modules = [
+        getattr(tasks, a) for a in dir(tasks) if not a.startswith('_')
+    ]
+    tasks_classes = []
+    for t in tasks_modules:
+        tasks_submodules = [
+            getattr(t, a) for a in dir(t) if not a.startswith('_')
+        ]
+        for t in tasks_submodules:
+            tasks_loops = [
+                getattr(t, a) for a in dir(t) if not a.startswith('_') and \
+                a.endswith('TaskLoop')
+            ]
+            tasks_loops = [t for t in tasks_loops if isinstance(t, type)]
+            tasks_classes += tasks_loops
+    return [t(bot) for t in tasks_classes]
