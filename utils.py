@@ -78,7 +78,7 @@ def db_connect():
     )
 
 async def get_embed(ctx, title='', description='', colour=0, thumbnail='',
-        author=None, footer=None, fields=()):
+        author=None, footer=None, image=None, fields=()):
     """Toma los datos para rellenar el embed y lo devuelve con las 
     propiedades y campos indicados.
     """
@@ -88,6 +88,8 @@ async def get_embed(ctx, title='', description='', colour=0, thumbnail='',
         colour=colour
     )
     embed.set_thumbnail(url=thumbnail)
+    if image is not None:
+        embed.set_image(url=image)
     if author is not None:
         embed.set_author(
             name=author['name'],

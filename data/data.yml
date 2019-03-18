@@ -1,6 +1,7 @@
 command_groups:
   - commands.utility
   - commands.moderation
+  - commands.amusement
 db_config:
   host: localhost
   database: ghost
