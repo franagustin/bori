@@ -8,7 +8,7 @@ db_config:
   database: ghost
   user: ghost
 version: 0.1
-base version: 0.5
+base version: 0.7
 info title: Acerca de BORI GHOST
 info description: |
   Bot multiusos escrito en Python, usando la versión rewrite de discord.py.
