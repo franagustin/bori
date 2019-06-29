@@ -58,19 +58,21 @@ create_democracy_table: >
     title VARCHAR(2000) NOT NULL,
     options TEXT[] NOT NULL,
     votes INTEGER[],
-    voters NUMERIC(20),
+    voters json,
     active BOOLEAN NOT NULL DEFAULT TRUE
   );
 create_poll: >
-  INSERT INTO democracy(channel_id, title, options)
-  VALUES(%s, %s, %s);
+  INSERT INTO democracy(channel_id, title, options, votes, voters)
+  VALUES(%s, %s, %s, %s, %s)
+  RETURNING *;
 update_poll: >
   UPDATE democracy
     SET votes = %s, voters = %s
-    WHERE channel_id = %s AND ACTIVE = TRUE;
+    WHERE channel_id = %s AND active = TRUE;
 select_active_poll: >
   SELECT * FROM democracy WHERE channel_id = %s AND active = TRUE;
 close_active_poll: >
   UPDATE democracy
     SET active = FALSE
-    WHERE channel_id = %s AND active = TRUE;
+    WHERE channel_id = %s AND active = TRUE
+    RETURNING *;
