@@ -1,5 +1,9 @@
+import yaml
 from discord.ext import commands
 from utils import BaseCommand, get_member, get_role
+
+
+TEXTS = yaml.load(open('data/texts/moderation.yml'))
 
 
 class Role(BaseCommand):

@@ -26,14 +26,15 @@ select_filled_server_proles: >
   WHERE server_id = %s AND member_list <> '{}' AND member_list IS NOT NULL;
 insert_prole: >
   INSERT INTO persistent_roles(server_id, member_list, role_id) 
-  VALUES(%s, %s, %s)
+  VALUES(%s, %s, %s);
 get_members_prole: >
   SELECT member_list FROM persistent_roles
   WHERE server_id = %s AND role_id = %s;
 update_prole: >
   UPDATE persistent_roles
     SET member_list = %s
-    WHERE server_id = %s AND role_id = %s;
+    WHERE server_id = %s AND role_id = %s
+    RETURNING member_list;
 remove_prole: >
   DELETE FROM persistent_roles WHERE server_id = %s AND role_id = %s;
 create_muted_table: >
@@ -50,3 +51,26 @@ update_muted: >
 remove_muted: DELETE FROM muted WHERE server_id = %s AND member_id = %s;
 select_muted: SELECT * FROM muted WHERE server_id = %s AND member_id = %s;
 select_all_muted: SELECT * FROM muted WHERE server_id = %s;
+create_democracy_table: >
+  CREATE TABLE IF NOT EXISTS democracy (
+    id SERIAL NOT NULL PRIMARY KEY,
+    channel_id NUMERIC(20) NOT NULL,
+    title VARCHAR(2000) NOT NULL,
+    options TEXT[] NOT NULL,
+    votes INTEGER[],
+    voters NUMERIC(20),
+    active BOOLEAN NOT NULL DEFAULT TRUE
+  );
+create_poll: >
+  INSERT INTO democracy(channel_id, title, options)
+  VALUES(%s, %s, %s);
+update_poll: >
+  UPDATE democracy
+    SET votes = %s, voters = %s
+    WHERE channel_id = %s AND ACTIVE = TRUE;
+select_active_poll: >
+  SELECT * FROM democracy WHERE channel_id = %s AND active = TRUE;
+close_active_poll: >
+  UPDATE democracy
+    SET active = FALSE
+    WHERE channel_id = %s AND active = TRUE;

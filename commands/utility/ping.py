@@ -24,6 +24,7 @@ class Ping(BaseCommand):
             f'`:{reply_time}:`'
             )
         )
+        pong_msg = await pong_msg.channel.fetch_message(pong_msg.id)
         edited_time = pong_msg.edited_at
         edit_time = self.get_milliseconds(edited_time - ponged_time)
         total_time = self.get_milliseconds(edited_time - requested_time)
