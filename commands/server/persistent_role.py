@@ -17,6 +17,10 @@ class PersistentRole(BaseCommand):
             await self._list_server_proles(ctx)
             return
 
+        if not ctx.message.author.guild_permissions.manage_roles:
+            await ctx.message.channel.send('No tienes suficientes poderes.')
+            return
+
         options = args[1:]
         action = None
         if args[0] in TEXTS['add']:
@@ -194,7 +198,7 @@ class PersistentRole(BaseCommand):
             title=u'\U0001F947 '+'Roles Persistentes',
             description='Lista de roles persistentes para el servidor.',
             colour=0xFFA500,
-            thumbnail=ctx.message.guild.icon_url,
+            thumbnail='http://www.singlecolorimage.com/get/33fd8f/250x250',
             footer={
                 'text': (
                     f'Lista solicitada por {ctx.message.author.display_name} '

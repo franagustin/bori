@@ -142,10 +142,12 @@ def get_custom_tasks(bot):
         getattr(tasks, a) for a in dir(tasks) if not a.startswith('_')
     ]
     tasks_classes = []
+    print(dir(tasks))
     for t in tasks_modules:
         tasks_submodules = [
             getattr(t, a) for a in dir(t) if not a.startswith('_')
         ]
+        print(dir(t))
         for t in tasks_submodules:
             tasks_loops = [
                 getattr(t, a) for a in dir(t) if not a.startswith('_') and \
@@ -153,4 +155,5 @@ def get_custom_tasks(bot):
             ]
             tasks_loops = [t for t in tasks_loops if isinstance(t, type)]
             tasks_classes += tasks_loops
+    #raise Exception(tasks_classes)
     return [t(bot) for t in tasks_classes]

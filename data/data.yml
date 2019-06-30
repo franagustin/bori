@@ -3,6 +3,10 @@ command_groups:
   - commands.moderation
   - commands.amusement
   - commands.democracy
+  - commands.server
+task_groups:
+  - tasks.moderation
+  - tasks.server
 db_config:
   host: localhost
   database: ghost
