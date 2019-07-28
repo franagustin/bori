@@ -9,12 +9,11 @@ task_groups:
   - tasks.server
 db_config:
   host: localhost
-  database: ghost
-  user: ghost
+  database: copy_x
+  user: copy_x
 version: 0.1
 base version: 0.7
-info title: Acerca de BORI GHOST
+info title: Acerca de Copy X
 info description: |
   Bot multiusos escrito en Python, usando la versión rewrite de discord.py.
-  **BORI**: **B**ot **O**ficial de la **R**epública de **I**nsomniac.
-source code url: "[Repo en github](https://github.com/francokuchiki/bori/)"
+source code url: "[Repo en github](https://github.com/francokuchiki/bori/tree/copy_x/)"
