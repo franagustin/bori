@@ -3,7 +3,7 @@ from discord.ext import commands
 from utils import BaseCommand, db_connect, get_embed, get_member, get_role
 
 DB_QUERIES = yaml.load(open('data/db_queries.yml'))
-TEXTS = yaml.load(open('data/texts/moderation.yml'))
+TEXTS = yaml.load(open('data/texts/server.yml'))
 
 
 class PersistentRole(BaseCommand):
