@@ -8,7 +8,7 @@ from utils import BaseTask, get_custom_tasks, get_guild_prefixes
 
 data = yaml.load(open('data/data.yml'))
 
-TOKEN = os.getenv('GHOST_TOKEN')
+TOKEN = os.getenv('GRAPHBOT_TOKEN')
 
 bot = commands.Bot(
     command_prefix=get_guild_prefixes,

@@ -16,5 +16,4 @@ base version: 0.7
 info title: Acerca de BORI GHOST
 info description: |
   Bot multiusos escrito en Python, usando la versión rewrite de discord.py.
-  **BORI**: **B**ot **O**ficial de la **R**epública de **I**nsomniac.
-source code url: "[Repo en github](https://github.com/francokuchiki/bori/)"
+source code url: "[Repo en github](https://github.com/francokuchiki/bori/tree/graphbot/)"
