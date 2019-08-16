@@ -7,7 +7,7 @@ import yaml
 from discord.ext.commands import Cog, when_mentioned_or
 
 DB_DATA = yaml.load(open('data/data.yml'))['db_config']
-DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_PASSWORD = os.getenv('GRAPHBOT_DB_PASSWORD')
 DB_QUERIES = yaml.load(open('data/db_queries.yml'))
 
 TIME_PATTERN = re.compile(r'^[0-9]+s?m?h?d?w?a?y?c?$')

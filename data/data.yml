@@ -9,8 +9,8 @@ task_groups:
   - tasks.server
 db_config:
   host: localhost
-  database: ghost
-  user: ghost
+  database: graphbot
+  user: graphbot
 version: 0.1
 base version: 0.7
 info title: Acerca de BORI GHOST
