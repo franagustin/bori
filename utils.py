@@ -28,6 +28,7 @@ async def get_prefixes(guild_id):
     cur = conn.cursor()
     try:
         cur.execute(DB_QUERIES['select_prefixes'], (guild_id,))
+        prefixes = cur.fetchone()[0]
     except:
         conn.rollback()
         cur.execute(DB_QUERIES['create_prefix_table'])
@@ -36,7 +37,7 @@ async def get_prefixes(guild_id):
             (guild_id, ['g$'])
         )
         conn.commit()
-    prefixes = cur.fetchone()[0]
+        prefixes = cur.fetchone()[0]
     cur.close()
     conn.close()
     return prefixes

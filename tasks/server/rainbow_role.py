@@ -13,7 +13,10 @@ class RainbowRoleTaskLoop(BaseTask):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             for guild in self.bot.guilds:
-                await self._change_role_colour_for_guild(guild)
+                try:
+                    await self._change_role_colour_for_guild(guild)
+                except:
+                    pass
             await asyncio.sleep(5)
 
     async def _change_role_colour_for_guild(self, guild):
