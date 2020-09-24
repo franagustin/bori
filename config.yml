@@ -1,0 +1,24 @@
+info:
+  title: Acerca de BORI Ghost
+  description: |
+    Bot multiusos escrito en Python, usando la versión rewrite de discord.py.
+    **BORI**: **B**ot **O**ficial de la **R**epública de **I**nsomniac.
+  author:
+    name: Fran Agustín
+    url: https://github.com/franagustin/
+    icon_url: https://avatars1.githubusercontent.com/u/39889930
+  source_url: "[Repo en github](https://github.com/franagustin/bori/)"
+  version: 0.5
+extensions:
+  - cogs.amusement
+  - cogs.moderation
+  - cogs.server
+  - cogs.utility
+global_checks:
+  - is_enabled
+errors:
+  default: "ERROR: Error desconocido. Prueba a salir corriendo muy muy lejos."
+  Forbidden: Falta de permisos. Prueba a subir mi rol de lugar.
+  MissingPermissions: No tienes los permisos suficientes para realizar esa acción.
+  MissingRequiredArgument: Faltan parámetros. Revisa la sintaxis del comando.
+  CommandNotFound: Comando inexistente.

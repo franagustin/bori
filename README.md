@@ -3,14 +3,14 @@ Python-based discord bot. Now in discord.py rewrite version.
 
 ---
 
-## Installation
-* Install python 3.7
-* Install discord.py
-* git clone https://github.com/francokuchiki/bori-ghost-rewrite/
-* Install postgresql (sudo pacman -S postgresql | sudo apt-get install postgresql)
-* Run `sudo -u postgres initdb -D /var/lib/postgres/data`
-* Run `sudo systemctl start postgresql`
-* Run `psql -U postgres`
-* Write `CREATE USER ghost WITH PASSWORD 'password';`
-* Write `CREATE DATABASE ghost WITH OWNER ghost;`
-* Write `\q`
+## Dependencies
+* Python 3.8 (*should run with 3.7 too*).
+* Docker
+* Docker-Compose
+
+## Installing
+* Download this repository: `git clone https://github.com/francokuchiki/bori`.
+* Create **.env** file copying .env.example: `cp .env.example .env`.
+* Change settings inside **.env** file as you see fit.
+* Start Mongo's and Redis's docker containers (or use your own): `docker-compose up -d mongo redis`.
+* Start the bot's docker container: `docker-compose up bot`
