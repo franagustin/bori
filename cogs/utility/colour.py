@@ -11,7 +11,7 @@ from utils.guild_utils import get_author_string
 
 COLOUR_API_URL = 'https://www.thecolorapi.com/id/?hex={}'
 COLOUR_IMAGE_URL = (
-    'http://laruedacuadrada.com/ghosties/?red={}&green={}&blue={}&width=80&height=80'
+    'http://squarewheelteam.com/rp/ghosties/?red={}&green={}&blue={}&width=80&height=80'
 )
 
 
